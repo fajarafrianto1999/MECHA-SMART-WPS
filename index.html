@@ -1,0 +1,1963 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MECHA SMART-WPS | SMK Muhammadiyah 3 Yogyakarta</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #0b0f19;
+            --bg-surface: #131c2e;
+            --bg-card: #1e293b;
+            --bg-card-hover: #27354d;
+            --border: #334155;
+            --primary: #0284c7;
+            --primary-light: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.15);
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 75px;
+        }
+
+        /* Top Bar */
+        .top-navbar {
+            background: rgba(19, 28, 46, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 18px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--primary), #06b6d4);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .brand-text h1 {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            font-size: 10px;
+            color: var(--primary-light);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-school {
+            background: rgba(2, 132, 199, 0.15);
+            border: 1px solid var(--primary);
+            color: var(--primary-light);
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* Stepper Wizard */
+        .stepper-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 20px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .step-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .step-item.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary-light);
+            color: white;
+            box-shadow: 0 0 12px var(--primary-light);
+        }
+
+        .step-item.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .step-item.active .step-label {
+            color: var(--primary-light);
+        }
+
+        /* Main Container */
+        .app-content {
+            padding: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .card-header .icon {
+            font-size: 18px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 13.5px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Job Sheet Selector Radio Cards */
+        .job-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .job-card-option {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s;
+        }
+
+        .job-card-option:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .job-card-option.selected {
+            border-color: var(--primary-light);
+            background: rgba(2, 132, 199, 0.12);
+        }
+
+        .job-card-option .job-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .job-card-option .job-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .radio-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .job-card-option.selected .radio-circle {
+            border-color: var(--primary-light);
+        }
+
+        .job-card-option.selected .radio-circle::after {
+            content: '';
+            width: 9px;
+            height: 9px;
+            background: var(--primary-light);
+            border-radius: 50%;
+        }
+
+        /* Calculator Output Card */
+        .calc-result-box {
+            background: linear-gradient(135deg, #0f172a, #1a2332);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 14px;
+        }
+
+        .res-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .res-item {
+            background: var(--bg-card);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .res-label {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .res-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-top: 4px;
+        }
+
+        .res-gear {
+            grid-column: span 2;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+        }
+
+        .res-gear .res-val {
+            color: var(--success);
+            font-size: 17px;
+        }
+
+        /* Warning Banner */
+        .alert-box {
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 11.5px;
+            color: #fbbf24;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        /* Steps Table Item */
+        .step-card-row {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .step-row-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-num-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .step-op-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .step-meta-line {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .step-meta-line span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 18px;
+            font-size: 13.5px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            color: white;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-surface);
+            border-color: var(--text-muted);
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+            width: auto;
+        }
+
+        .btn-danger-sm {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: #fca5a5;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        /* Checkbox K3 */
+        .k3-check-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .k3-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-surface);
+            padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .k3-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-light);
+        }
+
+        .k3-item span {
+            font-size: 12.5px;
+            color: white;
+        }
+
+        /* Bottom Floating Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(19, 28, 46, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border);
+            padding: 10px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        /* Time Management Stats Card */
+        .time-stats-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 14px;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-top: 3px;
+        }
+
+        .stat-box.full-width {
+            grid-column: span 2;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border);
+        }
+
+        /* Action Buttons on Step Cards */
+        .step-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-icon-action {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-icon-action:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-icon-danger:hover {
+            background: var(--danger) !important;
+            border-color: var(--danger) !important;
+            color: white !important;
+        }
+
+        /* Toast Notification */
+        .toast-notify {
+            position: fixed;
+            top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: #064e3b;
+            font-weight: 700;
+            font-size: 12px;
+            padding: 7px 16px;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        /* Blueprint & Technical Drawing Box */
+        .blueprint-box {
+            background: #081a2e;
+            border: 1px solid #1e3a8a;
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin: 12px 0;
+            text-align: center;
+        }
+
+        .blueprint-box svg {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .spec-badge {
+            display: inline-block;
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--primary-light);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        /* Print Sheet for PDF Generation */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .top-navbar, .stepper-container, .bottom-nav, .btn, .no-print, .app-content {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+                color: black !important;
+                padding: 10px !important;
+            }
+        }
+
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top App Bar -->
+    <header class="top-navbar">
+        <div class="brand-box">
+            <div class="brand-icon">⚙️</div>
+            <div class="brand-text">
+                <h1>MECHA SMART-WPS</h1>
+                <p>Asisten Praktik Digital • XI TPM</p>
+            </div>
+        </div>
+        <div class="badge-school">SMK MUH 3 YK</div>
+    </header>
+
+    <!-- Step Wizard Nav -->
+    <nav class="stepper-container">
+        <div class="step-item active" id="stepIndicator1" onclick="goToStep(1)">
+            <div class="step-circle">1</div>
+            <div class="step-label">Identitas</div>
+        </div>
+        <div class="step-item" id="stepIndicator2" onclick="goToStep(2)">
+            <div class="step-circle">2</div>
+            <div class="step-label">Kalkulator</div>
+        </div>
+        <div class="step-item" id="stepIndicator3" onclick="goToStep(3)">
+            <div class="step-circle">3</div>
+            <div class="step-label">Urutan WPS</div>
+        </div>
+        <div class="step-item" id="stepIndicator4" onclick="goToStep(4)">
+            <div class="step-circle">4</div>
+            <div class="step-label">Kirim/PDF</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="app-content">
+
+        <!-- Toast Notification -->
+        <div class="toast-notify" id="toastBox">💾 Perubahan tersimpan otomatis</div>
+
+        <!-- ==================== STEP 1: IDENTITAS & JOB SHEET ==================== -->
+        <section id="step1View">
+            <div class="card">
+                <div class="card-header" style="justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="icon">👤</span>
+                        <h2>Identitas Siswa & Bengkel</h2>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="resetFormConfirmation()" title="Mulai lembar kerja baru" style="border-color:var(--border); font-size:11px; padding:4px 9px;">🔄 Reset / Baru</button>
+                </div>
+                <div class="form-group">
+                    <label>Nama Lengkap Siswa</label>
+                    <input type="text" class="form-control" id="inputNama" placeholder="Contoh: Muhammad Fajar" required>
+                </div>
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <select class="form-select" id="inputKelas">
+                            <option value="XI TPM 1">XI TPM 1</option>
+                            <option value="XI TPM 2">XI TPM 2</option>
+                            <option value="XI TPM 3">XI TPM 3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No. Presensi</label>
+                        <input type="number" class="form-control" id="inputAbsen" placeholder="1 s/d 36" min="1" max="36">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nomor Mesin Bubut Digunakan</label>
+                    <select class="form-select" id="inputMesin">
+                        <option value="01">Mesin Bubut 01 (Cuda 360)</option>
+                        <option value="02">Mesin Bubut 02 (Cuda 360)</option>
+                        <option value="03">Mesin Bubut 03 (Cuda 360)</option>
+                        <option value="04">Mesin Bubut 04 (Winho)</option>
+                        <option value="05">Mesin Bubut 05 (Winho)</option>
+                        <option value="06">Mesin Bubut 06 (Winho)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon">📐</span>
+                    <h2>Pilih Tugas Praktik (Job Sheet)</h2>
+                </div>
+                <div class="job-grid">
+                    <div class="job-card-option selected" onclick="selectJob(1, this)">
+                        <div>
+                            <div class="job-title">Job Sheet BU.01/TK.II: Bubut Rata dan Bertingkat</div>
+                            <div class="job-sub">Facing, Lubang Senter, Bertingkat Ø32, Ø28, Ø24 mm</div>
+                        </div>
+                        <div class="radio-circle"></div>
+                    </div>
+                    <div class="job-card-option" onclick="selectJob(2, this)">
+                        <div>
+                            <div class="job-title">Job Sheet BU.02/TK.II: Tirus, Chamfer, dan Kartel</div>
+                            <div class="job-sub">Tirus sudut 10°, Chamfer 1x45°, Kartel intan DIN 82</div>
+                        </div>
+                        <div class="radio-circle"></div>
+                    </div>
+                    <div class="job-card-option" onclick="selectJob(3, this)">
+                        <div>
+                            <div class="job-title">Job Sheet BU.03/TK.II: Mengebor, Bubut Dalam, Alur, & Ulir Luar</div>
+                            <div class="job-sub">Pengeboran Senter & Spiral, Bubut Dalam Ø18, Alur 3 mm, Ulir M24x2</div>
+                        </div>
+                        <div class="radio-circle"></div>
+                    </div>
+                    <div class="job-card-option" onclick="selectJob(4, this)">
+                        <div>
+                            <div class="job-title">Job Sheet BU.04/TK.II: Handle Pemutar</div>
+                            <div class="job-sub">Facing, Bertingkat Ø18 & Ø14, Tirus 5°, Kartel Ø18, Ulir M12x1.75</div>
+                        </div>
+                        <div class="radio-circle"></div>
+                    </div>
+                    <div class="job-card-option" onclick="selectJob(5, this)">
+                        <div>
+                            <div class="job-title">Job Sheet BU.05/TK.II: Arbor Shaft</div>
+                            <div class="job-sub">Pengeboran Tembus Ø16, Tirus Dalam 8°, Poros Presisi Ø25h7, Ulir M32x1.5</div>
+                        </div>
+                        <div class="radio-circle"></div>
+                    </div>
+                </div>
+                <div style="margin-top:14px;">
+                    <button class="btn btn-outline" style="border-color:var(--primary); color:var(--primary-light); font-size:12.5px;" onclick="openDrawingModal()">
+                        🔍 Buka Sketsa Dimensi & Gambar Kerja Job Sheet
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== STEP 2: SMART CALCULATOR ==================== -->
+        <section id="step2View" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon">🧮</span>
+                    <h2>Kalkulator Parameter Bubut</h2>
+                </div>
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>Material Benda Kerja</label>
+                        <select class="form-select" id="calcMaterial" onchange="hitungParameter()">
+                            <option value="baja" data-cs="25">Baja St.37 / Mild Steel (Cs: 25)</option>
+                            <option value="karbon_sedang" data-cs="20">Baja Karbon Sedang St.50 (Cs: 20)</option>
+                            <option value="aluminium" data-cs="70">Aluminium (Cs: 70)</option>
+                            <option value="kuningan" data-cs="45">Kuningan / Kuningan Kuning (Cs: 45)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Pahat Potong</label>
+                        <select class="form-select" id="calcPahat" onchange="hitungParameter()">
+                            <option value="hss" data-mult="1.0">HSS (High Speed Steel)</option>
+                            <option value="karbida" data-mult="2.2">Karbida / Insert (High Speed)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>Diameter Benda (d) mm</label>
+                        <input type="number" class="form-control" id="calcDia" value="32" min="1" max="150" oninput="hitungParameter()">
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Pekerjaan</label>
+                        <select class="form-select" id="calcOperasi" onchange="hitungParameter()">
+                            <option value="bubut_rata">Bubut Rata / Muka (Facing)</option>
+                            <option value="finishing">Bubut Halus (Finishing)</option>
+                            <option value="bor_senter">Mengebor Lubang Senter</option>
+                            <option value="kartel">Mengkartel (Knurling Intan)</option>
+                            <option value="ulir">Menyayat Ulir Metris</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Hasil Kalkulasi Otomatis -->
+                <div class="calc-result-box">
+                    <div class="res-grid">
+                        <div class="res-item">
+                            <div class="res-label">Kecepatan Potong (Cs)</div>
+                            <div class="res-val" id="resCs">25 <small style="font-size:11px;">m/mnt</small></div>
+                        </div>
+                        <div class="res-item">
+                            <div class="res-label">Spindel Teoritis (n)</div>
+                            <div class="res-val" id="resN">248 <small style="font-size:11px;">RPM</small></div>
+                        </div>
+                        <div class="res-gear">
+                            <div class="res-label" style="color:var(--success);">Rekomendasi Tuas Spindel Mesin</div>
+                            <div class="res-val" id="resGear">240 RPM (Tuas C - 2)</div>
+                        </div>
+                    </div>
+
+                    <!-- Alert K3 Cerdas -->
+                    <div id="k3WarningBox" class="alert-box" style="display:none;">
+                        <span>⚠️</span>
+                        <div id="k3WarningText">Peringatan K3: Gunakan RPM rendah!</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:14px;">
+                    <button class="btn btn-outline" onclick="salinRpmKeForm()">
+                        📥 Terapkan RPM Ini ke Rencana Kerja
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kalkulator Bantu Khusus Tirus & Ulir -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon">📐</span>
+                    <h2>Kalkulator Tambahan (Tirus & Ulir)</h2>
+                </div>
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>Tirus: Dia. Besar (D)</label>
+                        <input type="number" class="form-control" id="tirusD" value="32" oninput="hitungTirus()">
+                    </div>
+                    <div class="form-group">
+                        <label>Tirus: Dia. Kecil (d)</label>
+                        <input type="number" class="form-control" id="tirusd" value="26" oninput="hitungTirus()">
+                    </div>
+                </div>
+                <div class="row-grid">
+                    <div class="form-group">
+                        <label>Panjang Tirus (l) mm</label>
+                        <input type="number" class="form-control" id="tirusL" value="17" oninput="hitungTirus()">
+                    </div>
+                    <div class="form-group">
+                        <label>Sudut Geser Eretan (α)</label>
+                        <div class="res-val" id="resTirusSudut" style="font-size:16px; padding-top:8px;">10.08° ≈ 10°</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== STEP 3: URUTAN LANGKAH KERJA WPS (100% MODE MANDIRI) ==================== -->
+        <section id="step3View" style="display: none;">
+            <!-- Banner Mode Kemandirian -->
+            <div style="background:rgba(2, 132, 199, 0.1); border:1px solid var(--primary); border-radius:var(--radius-sm); padding:10px 14px; margin-bottom:14px; font-size:12px; color:var(--primary-light); display:flex; align-items:flex-start; gap:10px; line-height:1.4;">
+                <span style="font-size:16px;">🧠</span>
+                <div>
+                    <b style="color:white;">Prinsip Kemandirian & Penalaran Kritis:</b><br>
+                    Lembar kerja ini murni kosong. Analisis gambar teknik Job Sheet secara teliti, lalu susun tahapan kerja operasional Anda secara berurutan menggunakan tombol <b>[➕ Tambah Langkah Kerja Mandiri]</b>.
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header" style="justify-content:space-between; flex-wrap:wrap; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="icon">📝</span>
+                        <h2>Tabel Langkah Kerja (WPS)</h2>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-outline btn-sm" onclick="openDrawingModal()" style="border-color:var(--primary); color:var(--primary-light);">🔍 Gambar</button>
+                        <button class="btn btn-primary btn-sm" onclick="openAddStepModal()">➕ Tambah</button>
+                    </div>
+                </div>
+
+                <!-- Widget Estimasi Waktu Praktik (Time Management) -->
+                <div class="time-stats-card">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Operasi</div>
+                        <div class="stat-val" id="statTotalLangkah">0 Langkah</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Total Estimasi Waktu</div>
+                        <div class="stat-val" id="statTotalWaktu">0 Menit</div>
+                    </div>
+                    <div class="stat-box full-width">
+                        <div id="statEfisiensiText" style="font-size:11px; color:#94a3b8; display:flex; align-items:center; gap:6px;">
+                            <span>⏱️</span> <span>Target alokasi bengkel: 120 - 180 menit (4 Jam Pelajaran)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List Langkah Kerja Siswa (Murni Kosong Awal) -->
+                <div id="stepListContainer">
+                    <!-- Dynamic Rows Injected Here -->
+                </div>
+            </div>
+
+            <!-- Ceklis Kepatuhan K3 -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon">🦺</span>
+                    <h2>Checklist Keselamatan Kerja (K3)</h2>
+                </div>
+                <p style="font-size:11.5px; color:var(--text-muted);">Centang seluruh APD dan SOP wajib sebelum mengajukan persetujuan guru:</p>
+                <div class="k3-check-group">
+                    <label class="k3-item">
+                        <input type="checkbox" id="k3Wearpack" checked>
+                        <span>Wearpack bengkel terkancing rapi & lengan digulung</span>
+                    </label>
+                    <label class="k3-item">
+                        <input type="checkbox" id="k3Kacamata" checked>
+                        <span>Kacamata safety pelindung lemparan tatal/beram panas</span>
+                    </label>
+                    <label class="k3-item">
+                        <input type="checkbox" id="k3Sepatu" checked>
+                        <span>Sepatu safety bersol tebal anti licin dan anti tusukan</span>
+                    </label>
+                    <label class="k3-item">
+                        <input type="checkbox" id="k3KunciCekam" checked>
+                        <span>Kunci chuck SELALU dilepas segera setelah pencekaman</span>
+                    </label>
+                    <label class="k3-item">
+                        <input type="checkbox" id="k3Budaya5R" checked>
+                        <span>Komitmen budaya industri 5R/5S (Ringkas, Rapi, Resik, Rawat, Rajin)</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== STEP 4: REVIEW & PENGIRIMAN ==================== -->
+        <section id="step4View" style="display: none;">
+            <!-- Status Persetujuan Langsung Guru -->
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:10px 14px; background:rgba(245, 158, 11, 0.12); border:1px solid var(--accent); border-radius:var(--radius-sm); color:#fbbf24; font-size:12px; line-height:1.4;">
+                <span style="font-size:16px;">⏳</span>
+                <div>
+                    <b>Status: Menunggu Pemeriksaan & ACC Guru Pembimbing</b><br>
+                    <small style="color:var(--text-muted);">Kirimkan file ke Google Drive guru, lalu simpan PDF di HP Anda sebagai pegangan praktik saat guru memeriksa di mesin.</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon">📋</span>
+                    <h2>Pratinjau Lembar Kerja (WPS)</h2>
+                </div>
+                
+                <div style="background:var(--bg-surface); padding:12px; border-radius:var(--radius-sm); font-size:12px; line-height:1.6;">
+                    <p><b>Nama Siswa:</b> <span id="revNama">-</span></p>
+                    <p><b>Kelas / Presensi:</b> <span id="revKelas">-</span> / No. <span id="revAbsen">-</span></p>
+                    <p><b>Mesin Digunakan:</b> Mesin <span id="revMesin">-</span></p>
+                    <p><b>Tugas Praktik:</b> <span id="revProyek">-</span></p>
+                    <p><b>Total Langkah Disusun:</b> <span id="revTotalLangkah" style="color:var(--primary-light); font-weight:700;">0</span> Operasi Kerja</p>
+                    <p><b>Total Estimasi Waktu:</b> <span id="revTotalWaktu" style="color:var(--accent); font-weight:700;">0 Menit</span></p>
+                </div>
+
+                <div style="margin-top:16px; padding:10px 14px; background:rgba(16, 185, 129, 0.1); border:1px solid rgba(16, 185, 129, 0.3); border-radius:var(--radius-sm); display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:20px;">☁️</span>
+                    <div style="font-size:11.5px; color:#a7f3d0; line-height:1.4;">
+                        <b>Server Terhubung:</b> Cloud Google Drive & Spreadsheet Guru Aktif.<br>
+                        <span style="color:var(--text-muted);">Sekali tekan tombol di bawah, lembar kerja otomatis terkirim ke sistem guru.</span>
+                    </div>
+                </div>
+
+                <div style="margin-top:18px; display:flex; flex-direction:column; gap:10px;">
+                    <button class="btn btn-primary" id="btnSubmitDrive" onclick="kirimKeGoogleDrive()">
+                        🚀 1. KIRIM KE GOOGLE DRIVE GURU
+                    </button>
+                    <button class="btn btn-success" onclick="cetakPdfWps()">
+                        📄 2. SIMPAN / UNDUH PDF DI HP SAYA
+                    </button>
+                    <button class="btn btn-outline" onclick="kirimWhatsAppGuru()">
+                        💬 3. KIRIM RINGKASAN KE WHATSAPP GURU
+                    </button>
+                </div>
+
+                <div id="statusMessage" style="margin-top:12px; display:none;"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Buttons -->
+    <footer class="bottom-nav">
+        <button class="btn btn-outline" id="btnPrev" onclick="navigateStep(-1)" style="display:none;">
+            ⬅️ Kembali
+        </button>
+        <button class="btn btn-primary" id="btnNext" onclick="navigateStep(1)">
+            Lanjut: Kalkulator ➡️
+        </button>
+    </footer>
+
+    <!-- Modal Tambah / Edit Langkah Kerja Mandiri -->
+    <div class="modal-overlay" id="addStepModal">
+        <div class="modal-card">
+            <h3 id="modalStepTitle" style="font-size:15px; margin-bottom:12px; color:white;">➕ Tambah Langkah Kerja Mandiri</h3>
+            <div class="form-group">
+                <label>Pilih / Tulis Operasi Pemesinan</label>
+                <select class="form-select" id="mOpNama" style="margin-bottom:6px;">
+                    <option value="Membubut Rata Muka (Facing)">Membubut Rata Muka (Facing)</option>
+                    <option value="Membuat Lubang Senter (Center Drill)">Membuat Lubang Senter (Center Drill)</option>
+                    <option value="Membubut Silindris Kasar (Roughing)">Membubut Silindris Kasar (Roughing)</option>
+                    <option value="Membubut Silindris Halus (Finishing)">Membubut Silindris Halus (Finishing)</option>
+                    <option value="Membubut Poros Bertingkat">Membubut Poros Bertingkat</option>
+                    <option value="Membubut Tirus (Eretan Atas)">Membubut Tirus (Eretan Atas)</option>
+                    <option value="Membentuk Kartel Intan (Knurling DIN 82)">Membentuk Kartel Intan (Knurling DIN 82)</option>
+                    <option value="Mengebor Lubang (Drilling)">Mengebor Lubang (Drilling)</option>
+                    <option value="Membubut Dalam (Boring)">Membubut Dalam (Boring)</option>
+                    <option value="Membuat Alur Pembebas (Grooving)">Membuat Alur Pembebas (Grooving)</option>
+                    <option value="Menyayat Ulir Luar Metris (Threading)">Menyayat Ulir Luar Metris (Threading)</option>
+                    <option value="Membubut Chamfer 1x45°">Membubut Chamfer 1x45°</option>
+                    <option value="Deburring & Pembersihan 5R">Deburring & Pembersihan 5R</option>
+                </select>
+                <input type="text" class="form-control" id="mOpCustom" placeholder="Atau tuliskan keterangan spesifik dimensi (misal: Bertingkat Ø28 Pj 30 mm)">
+            </div>
+            <div class="form-group">
+                <label>Alat Potong / Pahat yang Dipilih</label>
+                <input type="text" class="form-control" id="mPahat" placeholder="Misal: Pahat Rata Kanan HSS / Pahat Muka / Pahat Alur" value="Pahat Rata Kanan HSS">
+            </div>
+            <div class="form-group">
+                <label>Alat Ukur / Standar Toleransi</label>
+                <input type="text" class="form-control" id="mAlatUkur" placeholder="Misal: Jangka Sorong 0.05 / Micrometer / Mal Sudut" value="Jangka Sorong 0.05 mm">
+            </div>
+            <div class="row-grid">
+                <div class="form-group">
+                    <label>Spindel (RPM) Hasil Hitungan</label>
+                    <input type="number" class="form-control" id="mRpm" value="450">
+                </div>
+                <div class="form-group">
+                    <label>Estimasi Waktu (Menit)</label>
+                    <input type="number" class="form-control" id="mWaktu" value="15">
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:14px;">
+                <button class="btn btn-outline" onclick="closeAddStepModal()">Batal</button>
+                <button class="btn btn-primary" id="btnSaveModalStep" onclick="saveNewStep()">Simpan Langkah</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gambar Kerja & Spesifikasi Job Sheet -->
+    <div class="modal-overlay" id="drawingModal">
+        <div class="modal-card" style="max-width: 620px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                <h3 style="font-size:15px; color:white; display:flex; align-items:center; gap:8px;">
+                    <span>📐</span> <span id="drawingModalTitle">Gambar Kerja Job Sheet</span>
+                </h3>
+                <button class="btn-icon-action" onclick="closeDrawingModal()" style="font-size:14px; font-weight:bold;">✕</button>
+            </div>
+            
+            <div id="drawingContainer">
+                <!-- SVG Blueprint & Specifications Injected Here -->
+            </div>
+
+            <div style="margin-top:16px;">
+                <button class="btn btn-outline" style="width:100%;" onclick="closeDrawingModal()">Tutup Gambar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lembar Cetak PDF Resmi (Khusus Tampilan Print / Unduh) -->
+    <div class="print-only" id="printableWpsSheet"></div>
+
+    <script>
+        // URL Webhook Google Apps Script Guru (Aktif & Terhubung Langsung)
+        const GOOGLE_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbznUEgG2WlI97FoCi25AbGKfCuJbR6vzd393B5NsBXOnWxeIjQoi_DAYYmHPWR9zbR_fg/exec';
+
+        // Data State - MURNI KOSONG (0 LANGKAH AWAL)
+        let currentStep = 1;
+        let selectedJobIndex = 1;
+        let selectedJobName = "Job Sheet BU.01/TK.II: Bubut Rata dan Bertingkat";
+        let recommendedRpm = 240;
+        let langkahKerjaList = []; // Murni kosong untuk menstimulasi kemandirian siswa
+        let editingStepIndex = -1;
+        const STORAGE_KEY = 'mecha_smart_wps_state_v1';
+
+        // Step Navigation
+        function goToStep(step) {
+            currentStep = step;
+            updateStepView();
+        }
+
+        function navigateStep(direction) {
+            currentStep += direction;
+            if (currentStep < 1) currentStep = 1;
+            if (currentStep > 4) currentStep = 4;
+            updateStepView();
+        }
+
+        function updateStepView() {
+            // Hide all views
+            document.getElementById('step1View').style.display = 'none';
+            document.getElementById('step2View').style.display = 'none';
+            document.getElementById('step3View').style.display = 'none';
+            document.getElementById('step4View').style.display = 'none';
+
+            // Show active
+            document.getElementById('step' + currentStep + 'View').style.display = 'block';
+
+            // Update Indicator
+            for (let i = 1; i <= 4; i++) {
+                let el = document.getElementById('stepIndicator' + i);
+                el.classList.remove('active', 'completed');
+                if (i === currentStep) el.classList.add('active');
+                else if (i < currentStep) el.classList.add('completed');
+            }
+
+            // Bottom Buttons
+            let btnPrev = document.getElementById('btnPrev');
+            let btnNext = document.getElementById('btnNext');
+
+            btnPrev.style.display = (currentStep === 1) ? 'none' : 'block';
+
+            if (currentStep === 1) btnNext.innerHTML = 'Lanjut: Kalkulator ➡️';
+            else if (currentStep === 2) btnNext.innerHTML = 'Lanjut: Urutan WPS ➡️';
+            else if (currentStep === 3) btnNext.innerHTML = 'Lanjut: Pratinjau & Kirim ➡️';
+            else if (currentStep === 4) btnNext.innerHTML = 'Selesai / Kirim 🚀';
+
+            if (currentStep === 3) renderStepRows();
+            if (currentStep === 4) renderReviewData();
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Job Selection
+        function selectJob(idx, element) {
+            selectedJobIndex = idx;
+            document.querySelectorAll('.job-card-option').forEach(el => el.classList.remove('selected'));
+            if (element) element.classList.add('selected');
+
+            const jobNames = [
+                "",
+                "Job Sheet BU.01/TK.II: Bubut Rata dan Bertingkat",
+                "Job Sheet BU.02/TK.II: Tirus, Chamfer, dan Kartel",
+                "Job Sheet BU.03/TK.II: Mengebor, Bubut Dalam, Alur, dan Ulir Luar",
+                "Job Sheet BU.04/TK.II: Handle Pemutar",
+                "Job Sheet BU.05/TK.II: Arbor Shaft"
+            ];
+            selectedJobName = jobNames[idx];
+            saveToLocalStorage();
+        }
+
+        // Calculator Logic
+        function hitungParameter() {
+            let mat = document.getElementById('calcMaterial');
+            let csBase = parseFloat(mat.options[mat.selectedIndex].getAttribute('data-cs'));
+            let pahat = document.getElementById('calcPahat');
+            let mult = parseFloat(pahat.options[pahat.selectedIndex].getAttribute('data-mult'));
+            let d = parseFloat(document.getElementById('calcDia').value) || 32;
+            let op = document.getElementById('calcOperasi').value;
+
+            let cs = csBase * mult;
+            let warningBox = document.getElementById('k3WarningBox');
+            let warningText = document.getElementById('k3WarningText');
+            warningBox.style.display = 'none';
+
+            // Special overrides based on operations
+            if (op === 'kartel') {
+                cs = 10; // RPM kartel wajib rendah
+                warningBox.style.display = 'flex';
+                warningText.innerHTML = '<b>Peringatan K3:</b> Pengkartelan WAJIB menggunakan putaran rendah (80 - 120 RPM) dan pelumasan oli yang cukup!';
+            } else if (op === 'ulir') {
+                cs = 12; // RPM ulir manual rendah
+                warningBox.style.display = 'flex';
+                warningText.innerHTML = '<b>Peringatan K3:</b> Pembubutan ulir metris menggunakan putaran rendah (100 - 150 RPM) agar pahat tidak menabrak bahu!';
+            }
+
+            let nTeoritis = Math.round((1000 * cs) / (Math.PI * d));
+
+            // Rekomendasi Gearbox terdekat
+            const gearList = [75, 110, 160, 240, 360, 520, 750, 1100, 1600];
+            let closest = gearList.reduce((prev, curr) => Math.abs(curr - nTeoritis) < Math.abs(prev - nTeoritis) ? curr : prev);
+
+            document.getElementById('resCs').innerHTML = Math.round(cs) + ' <small style="font-size:11px;">m/mnt</small>';
+            document.getElementById('resN').innerHTML = nTeoritis + ' <small style="font-size:11px;">RPM</small>';
+            document.getElementById('resGear').innerHTML = closest + ' RPM (Pilihan Gearbox Terdekat)';
+            recommendedRpm = closest;
+        }
+
+        function hitungTirus() {
+            let D = parseFloat(document.getElementById('tirusD').value) || 32;
+            let d = parseFloat(document.getElementById('tirusd').value) || 26;
+            let l = parseFloat(document.getElementById('tirusL').value) || 17;
+
+            let tanAlpha = (D - d) / (2 * l);
+            let alphaRad = Math.atan(tanAlpha);
+            let alphaDeg = alphaRad * (180 / Math.PI);
+
+            document.getElementById('resTirusSudut').innerHTML = alphaDeg.toFixed(2) + '° ≈ ' + Math.round(alphaDeg) + '°';
+        }
+
+        function salinRpmKeForm() {
+            alert('RPM ' + recommendedRpm + ' RPM telah tersimpan di kalkulator. Anda dapat menggunakannya saat menyusun langkah kerja mandiri di Step 3.');
+        }
+
+        // WPS Steps Management (Murni Mandiri dengan Up/Down & Edit)
+        function renderStepRows() {
+            let container = document.getElementById('stepListContainer');
+            container.innerHTML = '';
+
+            updateTimeStats();
+
+            if (langkahKerjaList.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:32px 16px; background:var(--bg-surface); border:2px dashed var(--border); border-radius:var(--radius-md);">
+                        <div style="font-size:32px; margin-bottom:10px;">📋</div>
+                        <div style="font-size:14px; font-weight:700; color:white; margin-bottom:6px;">Lembar Kerja Masih Kosong (Mode Mandiri)</div>
+                        <p style="font-size:11.5px; color:var(--text-muted); max-width:380px; margin:0 auto 16px auto; line-height:1.5;">
+                            Berdasarkan analisis gambar teknik Job Sheet, rancanglah urutan langkah kerja operasional Anda secara mandiri. Tentukan urutan proses yang logis, aman, dan efisien.
+                        </p>
+                        <div style="display:flex; justify-content:center; gap:8px;">
+                            <button class="btn btn-outline btn-sm" onclick="openDrawingModal()">🔍 Buka Gambar Job Sheet</button>
+                            <button class="btn btn-primary btn-sm" onclick="openAddStepModal()">➕ Tambah Langkah</button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            langkahKerjaList.forEach((item, idx) => {
+                let div = document.createElement('div');
+                div.className = 'step-card-row';
+                div.innerHTML = `
+                    <div class="step-row-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="step-num-badge">${idx + 1}</span>
+                            <span class="step-op-name">${item.operasi}</span>
+                        </div>
+                        <div class="step-actions">
+                            <button class="btn-icon-action" title="Geser ke atas" onclick="moveStep(${idx}, -1)" ${idx === 0 ? 'style="opacity:0.3; pointer-events:none;"' : ''}>▲</button>
+                            <button class="btn-icon-action" title="Geser ke bawah" onclick="moveStep(${idx}, 1)" ${idx === langkahKerjaList.length - 1 ? 'style="opacity:0.3; pointer-events:none;"' : ''}>▼</button>
+                            <button class="btn-icon-action" title="Edit langkah" onclick="openEditStepModal(${idx})">✏️</button>
+                            <button class="btn-icon-action btn-icon-danger" title="Hapus langkah" onclick="removeStep(${idx})">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="step-meta-line">
+                        <span>🔪 <b>Pahat:</b> ${item.pahat}</span>
+                        <span>📏 <b>Alat Ukur:</b> ${item.alatUkur}</span>
+                        <span>⚙️ <b>Spindel:</b> ${item.rpm} RPM</span>
+                        <span>⏱️ <b>Waktu:</b> ${item.waktu} mnt</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function moveStep(idx, dir) {
+            let targetIdx = idx + dir;
+            if (targetIdx < 0 || targetIdx >= langkahKerjaList.length) return;
+            let temp = langkahKerjaList[idx];
+            langkahKerjaList[idx] = langkahKerjaList[targetIdx];
+            langkahKerjaList[targetIdx] = temp;
+            renderStepRows();
+            saveToLocalStorage();
+            showToast('Urutan langkah kerja diperbarui');
+        }
+
+        function removeStep(idx) {
+            if (confirm('Hapus langkah kerja ini?')) {
+                langkahKerjaList.splice(idx, 1);
+                renderStepRows();
+                saveToLocalStorage();
+                showToast('Langkah kerja dihapus');
+            }
+        }
+
+        function openAddStepModal() {
+            editingStepIndex = -1;
+            document.getElementById('modalStepTitle').innerText = '➕ Tambah Langkah Kerja Mandiri';
+            document.getElementById('btnSaveModalStep').innerText = 'Simpan Langkah';
+            document.getElementById('mRpm').value = recommendedRpm;
+            document.getElementById('mOpCustom').value = '';
+            document.getElementById('addStepModal').classList.add('active');
+        }
+
+        function openEditStepModal(idx) {
+            editingStepIndex = idx;
+            let item = langkahKerjaList[idx];
+            document.getElementById('modalStepTitle').innerText = '✏️ Edit Langkah Kerja ke-' + (idx + 1);
+            document.getElementById('btnSaveModalStep').innerText = 'Perbarui Langkah';
+
+            let opSelect = document.getElementById('mOpNama');
+            let found = false;
+            for (let i = 0; i < opSelect.options.length; i++) {
+                if (item.operasi.startsWith(opSelect.options[i].value)) {
+                    opSelect.selectedIndex = i;
+                    let customPart = item.operasi.replace(opSelect.options[i].value, '').replace(/^ - /, '').trim();
+                    document.getElementById('mOpCustom').value = customPart;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                document.getElementById('mOpCustom').value = item.operasi;
+            }
+
+            document.getElementById('mPahat').value = item.pahat;
+            document.getElementById('mAlatUkur').value = item.alatUkur;
+            document.getElementById('mRpm').value = item.rpm;
+            document.getElementById('mWaktu').value = item.waktu;
+
+            document.getElementById('addStepModal').classList.add('active');
+        }
+
+        function closeAddStepModal() {
+            document.getElementById('addStepModal').classList.remove('active');
+        }
+
+        function saveNewStep() {
+            let baseOp = document.getElementById('mOpNama').value;
+            let customOp = document.getElementById('mOpCustom').value.trim();
+            let finalOp = customOp ? (baseOp + " - " + customOp) : baseOp;
+
+            let pahat = document.getElementById('mPahat').value.trim() || "Pahat Rata Kanan";
+            let ukur = document.getElementById('mAlatUkur').value.trim() || "Jangka Sorong 0.05 mm";
+            let rpm = parseInt(document.getElementById('mRpm').value) || 450;
+            let waktu = parseInt(document.getElementById('mWaktu').value) || 10;
+
+            let stepData = { operasi: finalOp, pahat: pahat, alatUkur: ukur, rpm: rpm, waktu: waktu };
+
+            if (editingStepIndex >= 0) {
+                langkahKerjaList[editingStepIndex] = stepData;
+                showToast('Langkah ke-' + (editingStepIndex + 1) + ' diperbarui');
+            } else {
+                langkahKerjaList.push(stepData);
+                showToast('Langkah baru ditambahkan');
+            }
+
+            closeAddStepModal();
+            renderStepRows();
+            saveToLocalStorage();
+        }
+
+        function updateTimeStats() {
+            let totalLangkah = langkahKerjaList.length;
+            let totalWaktu = langkahKerjaList.reduce((acc, curr) => acc + (parseInt(curr.waktu) || 0), 0);
+
+            let elLangkah = document.getElementById('statTotalLangkah');
+            let elWaktu = document.getElementById('statTotalWaktu');
+            let elText = document.getElementById('statEfisiensiText');
+
+            if (elLangkah) elLangkah.innerText = totalLangkah + ' Langkah';
+            if (elWaktu) elWaktu.innerText = totalWaktu + ' Menit';
+
+            if (elText) {
+                if (totalWaktu === 0) {
+                    elText.innerHTML = '<span>⏱️</span> <span>Target alokasi bengkel: 120 - 180 menit (4 Jam Pelajaran)</span>';
+                    elText.style.color = '#94a3b8';
+                } else if (totalWaktu <= 180) {
+                    elText.innerHTML = '<span>✅</span> <span style="color:#6ee7b7;"><b>Sesuai target bengkel:</b> ' + totalWaktu + ' menit dari alokasi 180 menit (Efisien)</span>';
+                } else if (totalWaktu <= 240) {
+                    elText.innerHTML = '<span>⚠️</span> <span style="color:#fcd34d;"><b>Waktu cukup padat:</b> ' + totalWaktu + ' menit. Jaga efisiensi pengerjaan!</span>';
+                } else {
+                    elText.innerHTML = '<span>⛔</span> <span style="color:#fca5a5;"><b>Melebihi alokasi!</b> ' + totalWaktu + ' menit melebihi jam pelajaran. Rampingkan proses!</span>';
+                }
+            }
+        }
+
+        // LocalStorage Auto-Save & Restore
+        function saveToLocalStorage() {
+            try {
+                let state = {
+                    nama: document.getElementById('inputNama').value,
+                    kelas: document.getElementById('inputKelas').value,
+                    absen: document.getElementById('inputAbsen').value,
+                    mesin: document.getElementById('inputMesin').value,
+                    jobIndex: selectedJobIndex,
+                    langkahKerjaList: langkahKerjaList,
+                    k3: {
+                        wearpack: document.getElementById('k3Wearpack').checked,
+                        kacamata: document.getElementById('k3Kacamata').checked,
+                        sepatu: document.getElementById('k3Sepatu').checked,
+                        kunciCekam: document.getElementById('k3KunciCekam').checked,
+                        budaya5R: document.getElementById('k3Budaya5R').checked
+                    }
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                console.warn('LocalStorage save failed:', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                let saved = localStorage.getItem(STORAGE_KEY);
+                if (!saved) return;
+                let state = JSON.parse(saved);
+
+                if (state.nama) document.getElementById('inputNama').value = state.nama;
+                if (state.kelas) document.getElementById('inputKelas').value = state.kelas;
+                if (state.absen) document.getElementById('inputAbsen').value = state.absen;
+                if (state.mesin) document.getElementById('inputMesin').value = state.mesin;
+
+                if (state.jobIndex) {
+                    let cards = document.querySelectorAll('.job-card-option');
+                    if (cards[state.jobIndex - 1]) {
+                        selectJob(state.jobIndex, cards[state.jobIndex - 1]);
+                    }
+                }
+
+                if (state.langkahKerjaList && state.langkahKerjaList.length > 0) {
+                    langkahKerjaList = state.langkahKerjaList;
+                    renderStepRows();
+                    showToast('Data sebelumnya berhasil dipulihkan');
+                }
+
+                if (state.k3) {
+                    if (state.k3.wearpack !== undefined) document.getElementById('k3Wearpack').checked = state.k3.wearpack;
+                    if (state.k3.kacamata !== undefined) document.getElementById('k3Kacamata').checked = state.k3.kacamata;
+                    if (state.k3.sepatu !== undefined) document.getElementById('k3Sepatu').checked = state.k3.sepatu;
+                    if (state.k3.kunciCekam !== undefined) document.getElementById('k3KunciCekam').checked = state.k3.kunciCekam;
+                    if (state.k3.budaya5R !== undefined) document.getElementById('k3Budaya5R').checked = state.k3.budaya5R;
+                }
+            } catch (e) {
+                console.warn('LocalStorage load failed:', e);
+            }
+        }
+
+        function resetFormConfirmation() {
+            if (confirm('Apakah Anda yakin ingin mengosongkan formulir dan memulai lembar kerja baru?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                document.getElementById('inputNama').value = '';
+                document.getElementById('inputAbsen').value = '';
+                langkahKerjaList = [];
+                renderStepRows();
+                showToast('Formulir berhasil direset');
+                goToStep(1);
+            }
+        }
+
+        function showToast(msg) {
+            let toast = document.getElementById('toastBox');
+            if (!toast) return;
+            toast.innerText = '💾 ' + msg;
+            toast.style.display = 'inline-flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }
+
+        // Job Drawing Viewer
+        function openDrawingModal() {
+            renderDrawingForSelectedJob();
+            document.getElementById('drawingModal').classList.add('active');
+        }
+
+        function closeDrawingModal() {
+            document.getElementById('drawingModal').classList.remove('active');
+        }
+
+        function renderDrawingForSelectedJob() {
+            let container = document.getElementById('drawingContainer');
+            let title = document.getElementById('drawingModalTitle');
+            
+            if (selectedJobIndex === 1) {
+                title.innerText = 'Job Sheet BU.01: Bubut Rata & Bertingkat';
+                container.innerHTML = `
+                    <div class="blueprint-box">
+                        <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#132a4a" stroke-width="0.5"/>
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="#081a2e"/>
+                            <rect width="100%" height="100%" fill="url(#grid)"/>
+                            <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
+                            
+                            <path d="M 60 40 L 160 40 L 160 48 L 280 48 L 280 56 L 420 56 L 420 82 L 410 90 L 420 98 L 420 124 L 280 124 L 280 132 L 160 132 L 160 140 L 60 140 L 60 98 L 70 90 L 60 82 Z" fill="#0f2b48" stroke="#38bdf8" stroke-width="2"/>
+                            <line x1="160" y1="40" x2="160" y2="140" stroke="#38bdf8" stroke-width="1.2"/>
+                            <line x1="280" y1="48" x2="280" y2="132" stroke="#38bdf8" stroke-width="1.2"/>
+                            
+                            <polygon points="60,82 70,90 60,98" fill="#38bdf8"/>
+                            <polygon points="420,82 410,90 420,98" fill="#38bdf8"/>
+                            
+                            <line x1="110" y1="30" x2="110" y2="150" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="2,2"/>
+                            <text x="110" y="32" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Ø32</text>
+                            
+                            <line x1="220" y1="38" x2="220" y2="142" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="2,2"/>
+                            <text x="220" y="40" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Ø28</text>
+                            
+                            <line x1="350" y1="46" x2="350" y2="134" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="2,2"/>
+                            <text x="350" y="48" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Ø24</text>
+                            
+                            <line x1="60" y1="155" x2="160" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="110" y="168" fill="#fff" font-size="10" text-anchor="middle">30 mm</text>
+                            
+                            <line x1="160" y1="155" x2="280" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="220" y="168" fill="#fff" font-size="10" text-anchor="middle">35 mm</text>
+                            
+                            <line x1="280" y1="155" x2="420" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="350" y="168" fill="#fff" font-size="10" text-anchor="middle">40 mm</text>
+                        </svg>
+                    </div>
+                    <div style="font-size:12px; line-height:1.5;">
+                        <b style="color:white;">Spesifikasi Kunci:</b>
+                        <div style="margin-top:6px;">
+                            <span class="spec-badge">Bahan: Mild Steel Ø38 x 120 mm</span>
+                            <span class="spec-badge">Toleransi Umum: ±0.1 mm</span>
+                            <span class="spec-badge">Kehalusan: N7 (Ra 1.6 µm)</span>
+                            <span class="spec-badge">Center Drill: BS 3 (60°)</span>
+                        </div>
+                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
+                            <b>Urutan Kritis:</b> Facing kedua ujung ➔ Lubang senter bor BS 3 ➔ Pembubutan bertingkat dari diameter terbesar (Ø32) ke terkecil (Ø24) ➔ Chamfer 1x45° di ujung benda.
+                        </p>
+                    </div>
+                `;
+            } else if (selectedJobIndex === 2) {
+                title.innerText = 'Job Sheet BU.02: Tirus, Chamfer, & Kartel';
+                container.innerHTML = `
+                    <div class="blueprint-box">
+                        <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#081a2e"/>
+                            <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
+                            
+                            <pattern id="knurl" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                                <line x1="0" y1="0" x2="0" y2="6" stroke="#fbbf24" stroke-width="1" />
+                                <line x1="0" y1="0" x2="6" y2="0" stroke="#fbbf24" stroke-width="1" />
+                            </pattern>
+                            <rect x="60" y="36" width="110" height="108" fill="url(#knurl)" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="170" y="44" width="100" height="92" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
+                            <polygon points="270,44 380,56 380,124 270,136" fill="#133d69" stroke="#38bdf8" stroke-width="2"/>
+                            <polygon points="380,56 390,62 390,118 380,124" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
+                            
+                            <text x="115" y="28" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="middle">Kartel Intan Ø36</text>
+                            <text x="325" y="42" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Tirus α = 10°</text>
+                            <text x="400" y="80" fill="#a7f3d0" font-size="10">1x45°</text>
+                            
+                            <line x1="60" y1="155" x2="170" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="115" y="168" fill="#fff" font-size="10" text-anchor="middle">25 mm</text>
+                            <line x1="270" y1="155" x2="380" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="325" y="168" fill="#fff" font-size="10" text-anchor="middle">L = 17 mm</text>
+                        </svg>
+                    </div>
+                    <div style="font-size:12px; line-height:1.5;">
+                        <b style="color:white;">Spesifikasi Kunci:</b>
+                        <div style="margin-top:6px;">
+                            <span class="spec-badge">Pergeseran Eretan: 10°</span>
+                            <span class="spec-badge">Rumus: tan α = (D-d)/(2·L)</span>
+                            <span class="spec-badge">Kartel: DIN 82 (80 - 120 RPM)</span>
+                            <span class="spec-badge">Pelumas: Oli Pendingin</span>
+                        </div>
+                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
+                            <b>K3 Kritis:</b> Pengkartelan menggunakan putaran spindle rendah (maks 120 RPM). Bebaskan kunci chuck segera. Lindungi permukaan kartel saat pembalikan pencekaman dengan plat pelindung.
+                        </p>
+                    </div>
+                `;
+            } else if (selectedJobIndex === 3) {
+                title.innerText = 'Job Sheet BU.03: Bor, Bubut Dalam, Alur, & Ulir';
+                container.innerHTML = `
+                    <div class="blueprint-box">
+                        <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#081a2e"/>
+                            <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
+                            
+                            <rect x="290" y="52" width="100" height="76" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
+                            <path d="M 290 52 L 300 48 L 310 52 L 320 48 L 330 52 L 340 48 L 350 52 L 360 48 L 370 52 L 380 48 L 390 52" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+                            <path d="M 290 128 L 300 132 L 310 128 L 320 132 L 330 128 L 340 132 L 350 128 L 360 132 L 370 128 L 380 132 L 390 128" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
+                            <rect x="275" y="56" width="15" height="68" fill="#081a2e" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="70" y="40" width="205" height="100" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="70" y="65" width="80" height="50" fill="none" stroke="#ef4444" stroke-dasharray="4,3" stroke-width="1.8"/>
+                            
+                            <text x="110" y="94" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle">Boring Ø18H7</text>
+                            <text x="282" y="38" fill="#38bdf8" font-size="10" text-anchor="middle">Alur 3 mm</text>
+                            <text x="340" y="40" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">Ulir M24x2-6g</text>
+                            
+                            <line x1="70" y1="155" x2="150" y2="155" stroke="#ef4444" stroke-width="1"/>
+                            <text x="110" y="168" fill="#fca5a5" font-size="10" text-anchor="middle">Dalam 25 mm</text>
+                            <line x1="290" y1="155" x2="390" y2="155" stroke="#f59e0b" stroke-width="1"/>
+                            <text x="340" y="168" fill="#fcd34d" font-size="10" text-anchor="middle">Ulir 28 mm</text>
+                        </svg>
+                    </div>
+                    <div style="font-size:12px; line-height:1.5;">
+                        <b style="color:white;">Spesifikasi Kunci:</b>
+                        <div style="margin-top:6px;">
+                            <span class="spec-badge">Boring: Ø18H7 (+0.018/-0.000)</span>
+                            <span class="spec-badge">Ulir Luar: M24x2 (Sudut 60°)</span>
+                            <span class="spec-badge">Kedalaman Ulir: h = 0.6134·P = 1.23 mm</span>
+                            <span class="spec-badge">Alur: Lebar 3 mm, T = 1.5 mm</span>
+                        </div>
+                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
+                            <b>Teknik Operasi:</b> Penyetelan pahat ulir 60° harus tepat setinggi senter dan tegak lurus sumbu benda kerja menggunakan mal ulir. Pemakanan ulir bertahap (0.2 ➔ 0.1 ➔ 0.05 mm) dengan RPM 100 - 150 RPM.
+                        </p>
+                    </div>
+                `;
+            } else if (selectedJobIndex === 4) {
+                title.innerText = 'Job Sheet BU.04: Handle Pemutar';
+                container.innerHTML = `
+                    <div class="blueprint-box">
+                        <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#081a2e"/>
+                            <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
+                            
+                            <rect x="150" y="50" width="130" height="80" fill="url(#knurl)" stroke="#38bdf8" stroke-width="1.5"/>
+                            <polygon points="280,50 380,58 380,122 280,130" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="380" y="58" width="50" height="64" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="70" y="62" width="65" height="56" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="135" y="66" width="15" height="48" fill="#081a2e" stroke="#38bdf8" stroke-width="1"/>
+                            
+                            <text x="100" y="52" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">M12x1.75</text>
+                            <text x="215" y="42" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="middle">Kartel Intan Ø18</text>
+                            <text x="330" y="48" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Tirus 5°</text>
+                            <text x="405" y="52" fill="#a7f3d0" font-size="10" text-anchor="middle">Ø14</text>
+                            
+                            <line x1="70" y1="155" x2="430" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="250" y="168" fill="#fff" font-size="10" text-anchor="middle">Panjang Total: 125 mm</text>
+                        </svg>
+                    </div>
+                    <div style="font-size:12px; line-height:1.5;">
+                        <b style="color:white;">Spesifikasi Kunci:</b>
+                        <div style="margin-top:6px;">
+                            <span class="spec-badge">Bahan: ST.41 Ø22 x 125 mm</span>
+                            <span class="spec-badge">Ulir: M12 x 1.75</span>
+                            <span class="spec-badge">Tirus: 5° (Eretan Atas)</span>
+                            <span class="spec-badge">Kartel: DIN 82 RGE</span>
+                        </div>
+                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
+                            <b>Fungsi Komponen:</b> Handle pemutar eretan/ragum presisi. Memadukan keindahan tekstur grip kartel dengan fungsi ulir penyambung.
+                        </p>
+                    </div>
+                `;
+            } else if (selectedJobIndex === 5) {
+                title.innerText = 'Job Sheet BU.05: Arbor Shaft';
+                container.innerHTML = `
+                    <div class="blueprint-box">
+                        <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="100%" height="100%" fill="#081a2e"/>
+                            <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
+                            
+                            <rect x="50" y="70" width="390" height="40" fill="none" stroke="#ef4444" stroke-dasharray="4,3" stroke-width="1.5"/>
+                            <polygon points="50,56 160,70 160,110 50,124" fill="#2d1525" stroke="#f43f5e" stroke-dasharray="4,3" stroke-width="1.8"/>
+                            <rect x="170" y="47" width="160" height="86" fill="#0f2b48" stroke="#10b981" stroke-width="2"/>
+                            <rect x="330" y="55" width="15" height="70" fill="#081a2e" stroke="#38bdf8" stroke-width="1"/>
+                            <rect x="345" y="42" width="95" height="96" fill="#133d69" stroke="#f59e0b" stroke-width="1.5"/>
+                            
+                            <text x="105" y="42" fill="#fb7185" font-size="11" font-weight="bold" text-anchor="middle">Tirus Dalam 8°</text>
+                            <text x="250" y="38" fill="#34d399" font-size="12" font-weight="bold" text-anchor="middle">Poros Presisi Ø25h7</text>
+                            <text x="390" y="35" fill="#fcd34d" font-size="11" font-weight="bold" text-anchor="middle">M32x1.5</text>
+                            <text x="250" y="95" fill="#fca5a5" font-size="10" text-anchor="middle">Lubang Tembus Ø16</text>
+                            
+                            <line x1="50" y1="155" x2="440" y2="155" stroke="#38bdf8" stroke-width="1"/>
+                            <text x="245" y="168" fill="#fff" font-size="10" text-anchor="middle">Panjang Benda: 64 mm</text>
+                        </svg>
+                    </div>
+                    <div style="font-size:12px; line-height:1.5;">
+                        <b style="color:white;">Spesifikasi Kunci:</b>
+                        <div style="margin-top:6px;">
+                            <span class="spec-badge">Toleransi ISO: Ø25h7 (+0.000 / -0.021 mm)</span>
+                            <span class="spec-badge">Ulir Halus: M32 x 1.5</span>
+                            <span class="spec-badge">Tirus Dalam: 8° (Boring Bar)</span>
+                            <span class="spec-badge">Alat Ukur: Mikrometer Luar 0.01 mm</span>
+                        </div>
+                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
+                            <b>Tantangan Presisi:</b> Membutuhkan kalibrasi micrometer 0.01 mm sebelum finishing poros Ø25h7 dan kontrol getaran (chatter) pada boring bar tirus dalam dengan overhang minimal.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        // Review & Submission Logic
+        function renderReviewData() {
+            let nama = document.getElementById('inputNama').value || '(Belum Diisi)';
+            let kelas = document.getElementById('inputKelas').value;
+            let absen = document.getElementById('inputAbsen').value || '-';
+            let mesin = document.getElementById('inputMesin').value;
+            let totalWaktu = langkahKerjaList.reduce((acc, curr) => acc + (parseInt(curr.waktu) || 0), 0);
+
+            document.getElementById('revNama').innerText = nama;
+            document.getElementById('revKelas').innerText = kelas;
+            document.getElementById('revAbsen').innerText = absen;
+            document.getElementById('revMesin').innerText = mesin;
+            document.getElementById('revProyek').innerText = selectedJobName;
+            document.getElementById('revTotalLangkah').innerText = langkahKerjaList.length;
+            document.getElementById('revTotalWaktu').innerText = totalWaktu + ' Menit';
+        }
+
+        function buildPrintableSheet() {
+            let nama = document.getElementById('inputNama').value || '-';
+            let kelas = document.getElementById('inputKelas').value;
+            let absen = document.getElementById('inputAbsen').value || '-';
+            let mesin = document.getElementById('inputMesin').value;
+            let mat = document.getElementById('calcMaterial').options[document.getElementById('calcMaterial').selectedIndex].text;
+            let totalWaktu = langkahKerjaList.reduce((acc, curr) => acc + (parseInt(curr.waktu) || 0), 0);
+
+            let rowsHtml = '';
+            langkahKerjaList.forEach((item, idx) => {
+                rowsHtml += `
+                    <tr>
+                        <td style="text-align:center; padding:6px; border:1px solid #000;">${idx + 1}</td>
+                        <td style="padding:6px; border:1px solid #000; font-weight:bold;">${item.operasi}</td>
+                        <td style="padding:6px; border:1px solid #000; text-align:center;">${item.pahat}</td>
+                        <td style="padding:6px; border:1px solid #000; text-align:center;">${item.alatUkur}</td>
+                        <td style="padding:6px; border:1px solid #000; text-align:center;">${item.rpm} RPM</td>
+                        <td style="padding:6px; border:1px solid #000; text-align:center;">${item.waktu} mnt</td>
+                    </tr>
+                `;
+            });
+
+            let el = document.getElementById('printableWpsSheet');
+            el.innerHTML = `
+                <div style="font-family:'Times New Roman', serif; color:#000; padding:15px; font-size:11pt; line-height:1.3;">
+                    <div style="text-align:center; border-bottom:2px solid #000; padding-bottom:6px; margin-bottom:12px;">
+                        <h2 style="margin:0; font-size:14pt; font-weight:bold;">SMK MUHAMMADIYAH 3 YOGYAKARTA</h2>
+                        <h3 style="margin:2px 0; font-size:12pt; font-weight:normal;">WORK PREPARATION SHEET (MECHA SMART-WPS)</h3>
+                        <p style="margin:0; font-size:9.5pt; color:#333;">Konsentrasi Keahlian Teknik Pemesinan | Tahun Pelajaran 2025/2026</p>
+                    </div>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:12px; font-size:10pt;">
+                        <tr>
+                            <td style="width:18%;"><b>Nama Siswa</b></td><td style="width:2%;">:</td><td style="width:35%;">${nama}</td>
+                            <td style="width:18%;"><b>Proyek Praktik</b></td><td style="width:2%;">:</td><td>${selectedJobName}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Kelas / Presensi</b></td><td>:</td><td>${kelas} / No. ${absen}</td>
+                            <td><b>Mesin Bubut</b></td><td>:</td><td>Mesin ${mesin}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Material Benda</b></td><td>:</td><td>${mat}</td>
+                            <td><b>Total Estimasi</b></td><td>:</td><td><b>${totalWaktu} Menit</b> (${langkahKerjaList.length} Operasi Mandiri)</td>
+                        </tr>
+                    </table>
+                    <table style="width:100%; border-collapse:collapse; font-size:9.5pt;">
+                        <thead>
+                            <tr style="background:#f2f2f2;">
+                                <th style="width:5%; border:1px solid #000; padding:6px; text-align:center;">No</th>
+                                <th style="width:35%; border:1px solid #000; padding:6px; text-align:center;">Uraian Langkah Kerja Operasional</th>
+                                <th style="width:18%; border:1px solid #000; padding:6px; text-align:center;">Alat Potong / Pahat</th>
+                                <th style="width:18%; border:1px solid #000; padding:6px; text-align:center;">Alat Ukur / Standar</th>
+                                <th style="width:12%; border:1px solid #000; padding:6px; text-align:center;">Spindel (n)</th>
+                                <th style="width:12%; border:1px solid #000; padding:6px; text-align:center;">Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                    <div style="margin-top:12px; font-size:9.5pt; border:1px solid #000; padding:6px; background:#fafafa;">
+                        <b>Kepatuhan APD K3 & Budaya 5R:</b> Wearpack, Kacamata Safety, Sepatu Safety, Kunci Cekam Selalu Dilepas, Budaya 5R Bengkel (Terpenuhi).
+                    </div>
+                    <table style="width:100%; margin-top:25px; border-collapse:collapse; text-align:center; font-size:10pt;">
+                        <tr>
+                            <td style="width:50%;">Murid Pelaksana Praktik,</td>
+                            <td style="width:50%;">Mengetahui & Menyetujui,<br>Guru Pengampu Praktik</td>
+                        </tr>
+                        <tr>
+                            <td style="height:55px;"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><b>( ${nama} )</b><br>No. Presensi: ${absen}</td>
+                            <td><b>( Fajar Afrianto )</b><br>NIM. 20250843725</td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+        }
+
+        function cetakPdfWps() {
+            let nama = document.getElementById('inputNama').value.trim();
+            if (!nama) {
+                alert('Nama Siswa wajib diisi terlebih dahulu!');
+                goToStep(1);
+                return;
+            }
+            if (langkahKerjaList.length === 0) {
+                alert('Peringatan: Langkah kerja masih kosong! Susun minimal 1 langkah kerja operasional sebelum mencetak/mengunduh WPS.');
+                goToStep(3);
+                return;
+            }
+            buildPrintableSheet();
+            window.print();
+        }
+
+        async function kirimKeGoogleDrive() {
+            let nama = document.getElementById('inputNama').value.trim();
+            if (!nama) {
+                alert('Nama Siswa wajib diisi sebelum mengirimkan data!');
+                goToStep(1);
+                return;
+            }
+
+            if (langkahKerjaList.length === 0) {
+                alert('Peringatan: Langkah kerja masih kosong! Susun minimal 1 langkah operasional kerja secara mandiri di Step 3 sebelum meminta persetujuan guru.');
+                goToStep(3);
+                return;
+            }
+
+            let statusDiv = document.getElementById('statusMessage');
+            let btn = document.getElementById('btnSubmitDrive');
+
+            let payload = {
+                nama: nama,
+                kelas: document.getElementById('inputKelas').value,
+                absen: document.getElementById('inputAbsen').value || "-",
+                mesin: document.getElementById('inputMesin').value,
+                proyek: selectedJobName,
+                rpmRekomendasi: recommendedRpm,
+                material: document.getElementById('calcMaterial').value,
+                pahat: document.getElementById('calcPahat').value,
+                langkahKerja: langkahKerjaList,
+                k3: [
+                    document.getElementById('k3Wearpack').checked ? "Wearpack" : null,
+                    document.getElementById('k3Kacamata').checked ? "Kacamata Safety" : null,
+                    document.getElementById('k3Sepatu').checked ? "Sepatu Safety" : null,
+                    document.getElementById('k3KunciCekam').checked ? "Kunci Cekam Dilepas" : null,
+                    document.getElementById('k3Budaya5R').checked ? "Budaya 5R" : null
+                ].filter(Boolean)
+            };
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Mengirim ke Google Drive Guru...';
+
+            try {
+                let response = await fetch(GOOGLE_WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = 'rgba(16, 185, 129, 0.15)';
+                statusDiv.style.border = '1px solid var(--success)';
+                statusDiv.style.padding = '12px';
+                statusDiv.style.borderRadius = 'var(--radius-sm)';
+                statusDiv.style.color = '#6ee7b7';
+                statusDiv.innerHTML = `
+                    <b>🎉 Berhasil Dikirim ke Google Drive Guru!</b><br>
+                    <small>Data lembar kerja Anda telah tersimpan di Google Drive Guru. Sekarang tekan tombol hijau <b>"2. SIMPAN / UNDUH PDF DI HP SAYA"</b> agar Anda memiliki berkas pegangan praktik.</small>
+                `;
+            } catch (err) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+                statusDiv.style.border = '1px solid var(--danger)';
+                statusDiv.style.color = '#fca5a5';
+                statusDiv.innerHTML = 'Gagal mengirim: ' + err.message;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '🚀 1. KIRIM KE GOOGLE DRIVE GURU';
+            }
+        }
+
+        function kirimWhatsAppGuru() {
+            let nama = document.getElementById('inputNama').value || 'Siswa';
+            let kelas = document.getElementById('inputKelas').value;
+            let absen = document.getElementById('inputAbsen').value || '-';
+            let mesin = document.getElementById('inputMesin').value;
+            let totalWaktu = langkahKerjaList.reduce((acc, curr) => acc + (parseInt(curr.waktu) || 0), 0);
+
+            if (langkahKerjaList.length === 0) {
+                alert('Peringatan: Langkah kerja masih kosong! Anda harus menyusun minimal 1 langkah kerja sebelum mengirimkan ringkasan ke guru.');
+                goToStep(3);
+                return;
+            }
+
+            let text = `*LEMBAR KERJA MECHA SMART-WPS PEMESINAN BUBUT*%0A` +
+                `*SMK MUHAMMADIYAH 3 YOGYAKARTA*%0A%0A` +
+                `• *Nama:* ${encodeURIComponent(nama)}%0A` +
+                `• *Kelas / No:* ${encodeURIComponent(kelas)} / ${absen}%0A` +
+                `• *Mesin:* Bubut ${mesin}%0A` +
+                `• *Proyek:* ${encodeURIComponent(selectedJobName)}%0A` +
+                `• *Spindel Rekomendasi:* ${recommendedRpm} RPM%0A` +
+                `• *Total Operasi:* ${langkahKerjaList.length} Langkah (${totalWaktu} Menit)%0A` +
+                `• *Kepatuhan APD K3:* Lengkap Disetujui%0A%0A` +
+                `_Mohon persetujuan (approval) Bapak Guru untuk memulai praktik mesin._`;
+
+            window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
+        }
+
+        // Auto-save listeners on identity inputs
+        ['inputNama', 'inputKelas', 'inputAbsen', 'inputMesin'].forEach(id => {
+            let el = document.getElementById(id);
+            if (el) el.addEventListener('input', saveToLocalStorage);
+        });
+
+        ['k3Wearpack', 'k3Kacamata', 'k3Sepatu', 'k3KunciCekam', 'k3Budaya5R'].forEach(id => {
+            let el = document.getElementById(id);
+            if (el) el.addEventListener('change', saveToLocalStorage);
+        });
+
+        // Initialize & Restore from LocalStorage
+        loadFromLocalStorage();
+        hitungParameter();
+        hitungTirus();
+        updateTimeStats();
+    </script>
+</body>
+</html>
