@@ -670,6 +670,140 @@
             margin: 2px;
         }
 
+        /* Real Jobsheet Viewer & Lightbox */
+        .jobsheet-tab-nav {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-main);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+        .jobsheet-tab-btn {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 11.5px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .jobsheet-tab-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.4);
+        }
+        .jobsheet-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #0b1526;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+        }
+        .jobsheet-toolbar-btn-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .btn-ctrl {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 6px 10px;
+            font-size: 11.5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        .btn-ctrl:hover {
+            border-color: var(--primary);
+            color: var(--primary-light);
+        }
+        .btn-ctrl.btn-pdf {
+            background: #b91c1c;
+            border-color: #ef4444;
+            color: #ffffff;
+        }
+        .btn-ctrl.btn-pdf:hover {
+            background: #991b1b;
+        }
+        .jobsheet-img-wrapper {
+            position: relative;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            overflow: auto;
+            max-height: 55vh;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+            margin: 10px 0;
+            padding: 6px;
+            touch-action: pan-x pan-y pinch-zoom;
+        }
+        .jobsheet-img-wrapper img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-origin: top center;
+            border-radius: 2px;
+            cursor: zoom-in;
+        }
+        .lightbox-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            padding: 14px;
+            backdrop-filter: blur(5px);
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        .lightbox-body {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            touch-action: pan-x pan-y pinch-zoom;
+        }
+        .lightbox-body img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+        }
+
         /* Print Sheet for PDF Generation */
         @media print {
             body {
@@ -1117,7 +1251,7 @@
 
     <!-- Modal Gambar Kerja & Spesifikasi Job Sheet -->
     <div class="modal-overlay" id="drawingModal">
-        <div class="modal-card" style="max-width: 620px;">
+        <div class="modal-card" style="max-width: 820px; width: 95%;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:10px;">
                 <h3 style="font-size:15px; color:white; display:flex; align-items:center; gap:8px;">
                     <span>📐</span> <span id="drawingModalTitle">Gambar Kerja Job Sheet</span>
@@ -1126,12 +1260,23 @@
             </div>
             
             <div id="drawingContainer">
-                <!-- SVG Blueprint & Specifications Injected Here -->
+                <!-- Content Injected Here -->
             </div>
 
             <div style="margin-top:16px;">
                 <button class="btn btn-outline" style="width:100%;" onclick="closeDrawingModal()">Tutup Gambar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Fullscreen Gambar Asli -->
+    <div class="lightbox-overlay" id="jobsheetLightbox" onclick="closeJobsheetLightbox()">
+        <div class="lightbox-header" onclick="event.stopPropagation()">
+            <span style="font-weight:700; font-size:14px; color:white;" id="lightboxTitle">Gambar Job Sheet Asli</span>
+            <button class="btn-ctrl" onclick="closeJobsheetLightbox()" style="background:#ef4444; color:white; border:none; padding:6px 14px;">✕ Tutup</button>
+        </div>
+        <div class="lightbox-body">
+            <img id="lightboxImg" src="" alt="Jobsheet Fullscreen" onclick="event.stopPropagation()">
         </div>
     </div>
 
@@ -1516,7 +1661,74 @@
         }
 
         // Job Drawing Viewer
+        let currentJobsheetZoom = 1;
+        let activeJobsheetTab = 'real';
+
+        const JOBSHEET_INFO = {
+            1: {
+                title: 'Job Sheet BU.01: Bubut Rata & Bertingkat',
+                img: 'jobsheet_bu01.png',
+                pdf: 'Jobsheet_BU01_Bubut_Rata_Bertingkat.pdf',
+                specs: [
+                    'Bahan: Mild Steel Ø38 x 120 mm',
+                    'Toleransi Umum: ±0.1 mm',
+                    'Kehalusan: N7 (Ra 1.6 µm)',
+                    'Center Drill: BS 3 (60°)'
+                ],
+                kritis: 'Facing kedua ujung ➔ Lubang senter bor BS 3 ➔ Pembubutan bertingkat dari diameter terbesar (Ø32) ke terkecil (Ø24) ➔ Chamfer 1x45° di ujung benda.'
+            },
+            2: {
+                title: 'Job Sheet BU.02: Tirus, Chamfer, & Kartel',
+                img: 'jobsheet_bu02.png',
+                pdf: 'Jobsheet_BU02_Tirus_Chamfer_Kartel.pdf',
+                specs: [
+                    'Pergeseran Eretan: 10°',
+                    'Rumus: tan α = (D-d)/(2·L)',
+                    'Kartel: DIN 82 (80 - 120 RPM)',
+                    'Pelumas: Oli Pendingin'
+                ],
+                kritis: 'Pengkartelan menggunakan putaran spindle rendah (maks 120 RPM). Bebaskan kunci chuck segera. Lindungi permukaan kartel saat pembalikan pencekaman dengan plat pelindung.'
+            },
+            3: {
+                title: 'Job Sheet BU.03: Bor, Bubut Dalam, Alur, & Ulir',
+                img: 'jobsheet_bu03.png',
+                pdf: 'Jobsheet_BU03_Bor_Bubut_Dalam_Alur_Ulir.pdf',
+                specs: [
+                    'Boring: Ø18H7 (+0.018/-0.000)',
+                    'Ulir Luar: M24x2 (Sudut 60°)',
+                    'Kedalaman Ulir: h = 0.6134·P = 1.23 mm',
+                    'Alur: Lebar 3 mm, T = 1.5 mm'
+                ],
+                kritis: 'Penyetelan pahat ulir 60° harus tepat setinggi senter dan tegak lurus sumbu benda kerja menggunakan mal ulir. Pemakanan ulir bertahap (0.2 ➔ 0.1 ➔ 0.05 mm) dengan RPM 100 - 150 RPM.'
+            },
+            4: {
+                title: 'Job Sheet BU.04: Handle Pemutar',
+                img: 'jobsheet_bu04.png',
+                pdf: 'Jobsheet_BU04_Handle_Pemutar.pdf',
+                specs: [
+                    'Bahan: ST.41 Ø22 x 125 mm',
+                    'Ulir: M12 x 1.75',
+                    'Tirus: 5° (Eretan Atas)',
+                    'Kartel: DIN 82 RGE'
+                ],
+                kritis: 'Handle pemutar eretan/ragum presisi. Memadukan keindahan tekstur grip kartel dengan fungsi ulir penyambung.'
+            },
+            5: {
+                title: 'Job Sheet BU.05: Arbor Shaft',
+                img: 'jobsheet_bu05.png',
+                pdf: 'Jobsheet_BU05_Arbor_Shaft.pdf',
+                specs: [
+                    'Toleransi ISO: Ø25h7 (+0.000 / -0.021 mm)',
+                    'Ulir Halus: M32 x 1.5',
+                    'Tirus Dalam: 8° (Boring Bar)',
+                    'Alat Ukur: Mikrometer Luar 0.01 mm'
+                ],
+                kritis: 'Membutuhkan kalibrasi micrometer 0.01 mm sebelum finishing poros Ø25h7 dan kontrol getaran (chatter) pada boring bar tirus dalam dengan overhang minimal.'
+            }
+        };
+
         function openDrawingModal() {
+            currentJobsheetZoom = 1;
             renderDrawingForSelectedJob();
             document.getElementById('drawingModal').classList.add('active');
         }
@@ -1525,13 +1737,61 @@
             document.getElementById('drawingModal').classList.remove('active');
         }
 
-        function renderDrawingForSelectedJob() {
-            let container = document.getElementById('drawingContainer');
-            let title = document.getElementById('drawingModalTitle');
-            
-            if (selectedJobIndex === 1) {
-                title.innerText = 'Job Sheet BU.01: Bubut Rata & Bertingkat';
-                container.innerHTML = `
+        function switchJobsheetTab(tabName) {
+            activeJobsheetTab = tabName;
+            let realSection = document.getElementById('tabContentReal');
+            let bpSection = document.getElementById('tabContentBlueprint');
+            let btnReal = document.getElementById('btnTabReal');
+            let btnBp = document.getElementById('btnTabBlueprint');
+
+            if (tabName === 'real') {
+                if (realSection) realSection.style.display = 'block';
+                if (bpSection) bpSection.style.display = 'none';
+                if (btnReal) btnReal.classList.add('active');
+                if (btnBp) btnBp.classList.remove('active');
+            } else {
+                if (realSection) realSection.style.display = 'none';
+                if (bpSection) bpSection.style.display = 'block';
+                if (btnReal) btnReal.classList.remove('active');
+                if (btnBp) btnBp.classList.add('active');
+            }
+        }
+
+        function zoomJobsheet(delta) {
+            let img = document.getElementById('currentJobsheetImg');
+            if (!img) return;
+            currentJobsheetZoom = Math.min(Math.max(0.6, currentJobsheetZoom + delta), 2.5);
+            img.style.transform = `scale(${currentJobsheetZoom})`;
+            let zoomIndicator = document.getElementById('zoomLevelText');
+            if (zoomIndicator) zoomIndicator.innerText = Math.round(currentJobsheetZoom * 100) + '%';
+        }
+
+        function resetJobsheetZoom() {
+            let img = document.getElementById('currentJobsheetImg');
+            if (!img) return;
+            currentJobsheetZoom = 1;
+            img.style.transform = 'scale(1)';
+            let zoomIndicator = document.getElementById('zoomLevelText');
+            if (zoomIndicator) zoomIndicator.innerText = '100%';
+        }
+
+        function openJobsheetLightbox(imgSrc, title) {
+            let lb = document.getElementById('jobsheetLightbox');
+            let lbImg = document.getElementById('lightboxImg');
+            let lbTitle = document.getElementById('lightboxTitle');
+            if (lbImg) lbImg.src = imgSrc;
+            if (lbTitle) lbTitle.innerText = title || 'Gambar Job Sheet Asli';
+            if (lb) lb.classList.add('active');
+        }
+
+        function closeJobsheetLightbox() {
+            let lb = document.getElementById('jobsheetLightbox');
+            if (lb) lb.classList.remove('active');
+        }
+
+        function getSvgBlueprint(idx) {
+            if (idx === 1) {
+                return `
                     <div class="blueprint-box">
                         <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
                             <defs>
@@ -1569,27 +1829,13 @@
                             <text x="350" y="168" fill="#fff" font-size="10" text-anchor="middle">40 mm</text>
                         </svg>
                     </div>
-                    <div style="font-size:12px; line-height:1.5;">
-                        <b style="color:white;">Spesifikasi Kunci:</b>
-                        <div style="margin-top:6px;">
-                            <span class="spec-badge">Bahan: Mild Steel Ø38 x 120 mm</span>
-                            <span class="spec-badge">Toleransi Umum: ±0.1 mm</span>
-                            <span class="spec-badge">Kehalusan: N7 (Ra 1.6 µm)</span>
-                            <span class="spec-badge">Center Drill: BS 3 (60°)</span>
-                        </div>
-                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
-                            <b>Urutan Kritis:</b> Facing kedua ujung ➔ Lubang senter bor BS 3 ➔ Pembubutan bertingkat dari diameter terbesar (Ø32) ke terkecil (Ø24) ➔ Chamfer 1x45° di ujung benda.
-                        </p>
-                    </div>
                 `;
-            } else if (selectedJobIndex === 2) {
-                title.innerText = 'Job Sheet BU.02: Tirus, Chamfer, & Kartel';
-                container.innerHTML = `
+            } else if (idx === 2) {
+                return `
                     <div class="blueprint-box">
                         <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#081a2e"/>
                             <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
-                            
                             <pattern id="knurl" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
                                 <line x1="0" y1="0" x2="0" y2="6" stroke="#fbbf24" stroke-width="1" />
                                 <line x1="0" y1="0" x2="6" y2="0" stroke="#fbbf24" stroke-width="1" />
@@ -1598,141 +1844,143 @@
                             <rect x="170" y="44" width="100" height="92" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
                             <polygon points="270,44 380,56 380,124 270,136" fill="#133d69" stroke="#38bdf8" stroke-width="2"/>
                             <polygon points="380,56 390,62 390,118 380,124" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
-                            
                             <text x="115" y="28" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="middle">Kartel Intan Ø36</text>
                             <text x="325" y="42" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Tirus α = 10°</text>
                             <text x="400" y="80" fill="#a7f3d0" font-size="10">1x45°</text>
-                            
                             <line x1="60" y1="155" x2="170" y2="155" stroke="#38bdf8" stroke-width="1"/>
                             <text x="115" y="168" fill="#fff" font-size="10" text-anchor="middle">25 mm</text>
                             <line x1="270" y1="155" x2="380" y2="155" stroke="#38bdf8" stroke-width="1"/>
                             <text x="325" y="168" fill="#fff" font-size="10" text-anchor="middle">L = 17 mm</text>
                         </svg>
                     </div>
-                    <div style="font-size:12px; line-height:1.5;">
-                        <b style="color:white;">Spesifikasi Kunci:</b>
-                        <div style="margin-top:6px;">
-                            <span class="spec-badge">Pergeseran Eretan: 10°</span>
-                            <span class="spec-badge">Rumus: tan α = (D-d)/(2·L)</span>
-                            <span class="spec-badge">Kartel: DIN 82 (80 - 120 RPM)</span>
-                            <span class="spec-badge">Pelumas: Oli Pendingin</span>
-                        </div>
-                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
-                            <b>K3 Kritis:</b> Pengkartelan menggunakan putaran spindle rendah (maks 120 RPM). Bebaskan kunci chuck segera. Lindungi permukaan kartel saat pembalikan pencekaman dengan plat pelindung.
-                        </p>
-                    </div>
                 `;
-            } else if (selectedJobIndex === 3) {
-                title.innerText = 'Job Sheet BU.03: Bor, Bubut Dalam, Alur, & Ulir';
-                container.innerHTML = `
+            } else if (idx === 3) {
+                return `
                     <div class="blueprint-box">
                         <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#081a2e"/>
                             <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
-                            
                             <rect x="290" y="52" width="100" height="76" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
                             <path d="M 290 52 L 300 48 L 310 52 L 320 48 L 330 52 L 340 48 L 350 52 L 360 48 L 370 52 L 380 48 L 390 52" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
                             <path d="M 290 128 L 300 132 L 310 128 L 320 132 L 330 128 L 340 132 L 350 128 L 360 132 L 370 128 L 380 132 L 390 128" fill="none" stroke="#f59e0b" stroke-width="1.5"/>
                             <rect x="275" y="56" width="15" height="68" fill="#081a2e" stroke="#38bdf8" stroke-width="1.5"/>
                             <rect x="70" y="40" width="205" height="100" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
                             <rect x="70" y="65" width="80" height="50" fill="none" stroke="#ef4444" stroke-dasharray="4,3" stroke-width="1.8"/>
-                            
                             <text x="110" y="94" fill="#fca5a5" font-size="11" font-weight="bold" text-anchor="middle">Boring Ø18H7</text>
                             <text x="282" y="38" fill="#38bdf8" font-size="10" text-anchor="middle">Alur 3 mm</text>
                             <text x="340" y="40" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">Ulir M24x2-6g</text>
-                            
                             <line x1="70" y1="155" x2="150" y2="155" stroke="#ef4444" stroke-width="1"/>
                             <text x="110" y="168" fill="#fca5a5" font-size="10" text-anchor="middle">Dalam 25 mm</text>
                             <line x1="290" y1="155" x2="390" y2="155" stroke="#f59e0b" stroke-width="1"/>
                             <text x="340" y="168" fill="#fcd34d" font-size="10" text-anchor="middle">Ulir 28 mm</text>
                         </svg>
                     </div>
-                    <div style="font-size:12px; line-height:1.5;">
-                        <b style="color:white;">Spesifikasi Kunci:</b>
-                        <div style="margin-top:6px;">
-                            <span class="spec-badge">Boring: Ø18H7 (+0.018/-0.000)</span>
-                            <span class="spec-badge">Ulir Luar: M24x2 (Sudut 60°)</span>
-                            <span class="spec-badge">Kedalaman Ulir: h = 0.6134·P = 1.23 mm</span>
-                            <span class="spec-badge">Alur: Lebar 3 mm, T = 1.5 mm</span>
-                        </div>
-                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
-                            <b>Teknik Operasi:</b> Penyetelan pahat ulir 60° harus tepat setinggi senter dan tegak lurus sumbu benda kerja menggunakan mal ulir. Pemakanan ulir bertahap (0.2 ➔ 0.1 ➔ 0.05 mm) dengan RPM 100 - 150 RPM.
-                        </p>
-                    </div>
                 `;
-            } else if (selectedJobIndex === 4) {
-                title.innerText = 'Job Sheet BU.04: Handle Pemutar';
-                container.innerHTML = `
+            } else if (idx === 4) {
+                return `
                     <div class="blueprint-box">
                         <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#081a2e"/>
                             <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
-                            
-                            <rect x="150" y="50" width="130" height="80" fill="url(#knurl)" stroke="#38bdf8" stroke-width="1.5"/>
+                            <rect x="150" y="50" width="130" height="80" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
                             <polygon points="280,50 380,58 380,122 280,130" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
                             <rect x="380" y="58" width="50" height="64" fill="#0f2b48" stroke="#38bdf8" stroke-width="1.5"/>
                             <rect x="70" y="62" width="65" height="56" fill="#133d69" stroke="#38bdf8" stroke-width="1.5"/>
                             <rect x="135" y="66" width="15" height="48" fill="#081a2e" stroke="#38bdf8" stroke-width="1"/>
-                            
                             <text x="100" y="52" fill="#f59e0b" font-size="11" font-weight="bold" text-anchor="middle">M12x1.75</text>
                             <text x="215" y="42" fill="#fbbf24" font-size="11" font-weight="bold" text-anchor="middle">Kartel Intan Ø18</text>
                             <text x="330" y="48" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">Tirus 5°</text>
                             <text x="405" y="52" fill="#a7f3d0" font-size="10" text-anchor="middle">Ø14</text>
-                            
                             <line x1="70" y1="155" x2="430" y2="155" stroke="#38bdf8" stroke-width="1"/>
                             <text x="250" y="168" fill="#fff" font-size="10" text-anchor="middle">Panjang Total: 125 mm</text>
                         </svg>
                     </div>
-                    <div style="font-size:12px; line-height:1.5;">
-                        <b style="color:white;">Spesifikasi Kunci:</b>
-                        <div style="margin-top:6px;">
-                            <span class="spec-badge">Bahan: ST.41 Ø22 x 125 mm</span>
-                            <span class="spec-badge">Ulir: M12 x 1.75</span>
-                            <span class="spec-badge">Tirus: 5° (Eretan Atas)</span>
-                            <span class="spec-badge">Kartel: DIN 82 RGE</span>
-                        </div>
-                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
-                            <b>Fungsi Komponen:</b> Handle pemutar eretan/ragum presisi. Memadukan keindahan tekstur grip kartel dengan fungsi ulir penyambung.
-                        </p>
-                    </div>
                 `;
-            } else if (selectedJobIndex === 5) {
-                title.innerText = 'Job Sheet BU.05: Arbor Shaft';
-                container.innerHTML = `
+            } else if (idx === 5) {
+                return `
                     <div class="blueprint-box">
                         <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
                             <rect width="100%" height="100%" fill="#081a2e"/>
                             <line x1="20" y1="90" x2="500" y2="90" stroke="#f59e0b" stroke-dasharray="8,4,2,4" stroke-width="1.2"/>
-                            
                             <rect x="50" y="70" width="390" height="40" fill="none" stroke="#ef4444" stroke-dasharray="4,3" stroke-width="1.5"/>
                             <polygon points="50,56 160,70 160,110 50,124" fill="#2d1525" stroke="#f43f5e" stroke-dasharray="4,3" stroke-width="1.8"/>
                             <rect x="170" y="47" width="160" height="86" fill="#0f2b48" stroke="#10b981" stroke-width="2"/>
                             <rect x="330" y="55" width="15" height="70" fill="#081a2e" stroke="#38bdf8" stroke-width="1"/>
                             <rect x="345" y="42" width="95" height="96" fill="#133d69" stroke="#f59e0b" stroke-width="1.5"/>
-                            
                             <text x="105" y="42" fill="#fb7185" font-size="11" font-weight="bold" text-anchor="middle">Tirus Dalam 8°</text>
                             <text x="250" y="38" fill="#34d399" font-size="12" font-weight="bold" text-anchor="middle">Poros Presisi Ø25h7</text>
                             <text x="390" y="35" fill="#fcd34d" font-size="11" font-weight="bold" text-anchor="middle">M32x1.5</text>
                             <text x="250" y="95" fill="#fca5a5" font-size="10" text-anchor="middle">Lubang Tembus Ø16</text>
-                            
                             <line x1="50" y1="155" x2="440" y2="155" stroke="#38bdf8" stroke-width="1"/>
                             <text x="245" y="168" fill="#fff" font-size="10" text-anchor="middle">Panjang Benda: 64 mm</text>
                         </svg>
                     </div>
-                    <div style="font-size:12px; line-height:1.5;">
-                        <b style="color:white;">Spesifikasi Kunci:</b>
-                        <div style="margin-top:6px;">
-                            <span class="spec-badge">Toleransi ISO: Ø25h7 (+0.000 / -0.021 mm)</span>
-                            <span class="spec-badge">Ulir Halus: M32 x 1.5</span>
-                            <span class="spec-badge">Tirus Dalam: 8° (Boring Bar)</span>
-                            <span class="spec-badge">Alat Ukur: Mikrometer Luar 0.01 mm</span>
-                        </div>
-                        <p style="color:var(--text-muted); margin-top:8px; font-size:11px;">
-                            <b>Tantangan Presisi:</b> Membutuhkan kalibrasi micrometer 0.01 mm sebelum finishing poros Ø25h7 dan kontrol getaran (chatter) pada boring bar tirus dalam dengan overhang minimal.
-                        </p>
-                    </div>
                 `;
             }
+            return '';
+        }
+
+        function renderDrawingForSelectedJob() {
+            let container = document.getElementById('drawingContainer');
+            let title = document.getElementById('drawingModalTitle');
+            let info = JOBSHEET_INFO[selectedJobIndex] || JOBSHEET_INFO[1];
+
+            title.innerText = info.title;
+
+            let badgesHtml = info.specs.map(s => `<span class="spec-badge">${s}</span>`).join(' ');
+            let svgHtml = getSvgBlueprint(selectedJobIndex);
+
+            container.innerHTML = `
+                <!-- Tab Pilihan Tampilan -->
+                <div class="jobsheet-tab-nav">
+                    <button class="jobsheet-tab-btn ${activeJobsheetTab === 'real' ? 'active' : ''}" id="btnTabReal" onclick="switchJobsheetTab('real')">
+                        📑 Gambar Kerja Asli (Autodesk Inventor)
+                    </button>
+                    <button class="jobsheet-tab-btn ${activeJobsheetTab === 'blueprint' ? 'active' : ''}" id="btnTabBlueprint" onclick="switchJobsheetTab('blueprint')">
+                        📐 Skema Ringkas (Blueprint)
+                    </button>
+                </div>
+
+                <!-- Konten Tab 1: Gambar Kerja Asli -->
+                <div id="tabContentReal" style="display: ${activeJobsheetTab === 'real' ? 'block' : 'none'};">
+                    <div class="jobsheet-toolbar">
+                        <div class="jobsheet-toolbar-btn-group">
+                            <button class="btn-ctrl" onclick="zoomJobsheet(-0.15)" title="Perkecil">➖</button>
+                            <span class="btn-ctrl" id="zoomLevelText" onclick="resetJobsheetZoom()" title="Klik untuk Reset Zoom" style="cursor:pointer; min-width:48px; text-align:center;">100%</span>
+                            <button class="btn-ctrl" onclick="zoomJobsheet(0.15)" title="Perbesar">➕</button>
+                            <button class="btn-ctrl" onclick="openJobsheetLightbox('${info.img}', '${info.title}')" title="Buka Layar Penuh">⛶ Layar Penuh</button>
+                        </div>
+                        <div class="jobsheet-toolbar-btn-group">
+                            <a class="btn-ctrl btn-pdf" href="${info.pdf}" target="_blank" download="${info.pdf}">
+                                📄 Unduh / Buka Dokumen PDF
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="jobsheet-img-wrapper" onclick="openJobsheetLightbox('${info.img}', '${info.title}')" title="Klik untuk perbesar layar penuh">
+                        <img id="currentJobsheetImg" src="${info.img}" alt="${info.title}" loading="lazy">
+                    </div>
+                    <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:2px; margin-bottom:10px;">
+                        💡 <i>Sentuh / klik gambar untuk tampilan layar penuh resolusi tinggi.</i>
+                    </div>
+                </div>
+
+                <!-- Konten Tab 2: Skema Vektor Blueprint -->
+                <div id="tabContentBlueprint" style="display: ${activeJobsheetTab === 'blueprint' ? 'block' : 'none'};">
+                    ${svgHtml}
+                </div>
+
+                <!-- Spesifikasi Kunci & Catatan Kritis -->
+                <div style="font-size:12px; line-height:1.5; background:var(--bg-main); padding:10px 12px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                    <b style="color:white; display:block; margin-bottom:4px;">Spesifikasi Kunci:</b>
+                    <div style="margin-bottom:8px;">
+                        ${badgesHtml}
+                    </div>
+                    <p style="color:var(--text-muted); margin:0; font-size:11px;">
+                        <b>Urutan & K3 Kritis:</b> ${info.kritis}
+                    </p>
+                </div>
+            `;
         }
 
         // Review & Submission Logic
