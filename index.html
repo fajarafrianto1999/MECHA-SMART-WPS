@@ -835,7 +835,7 @@
             <div class="brand-icon">⚙️</div>
             <div class="brand-text">
                 <h1>MECHA SMART-WPS</h1>
-                <p>Asisten Praktik Digital • XI TPM</p>
+                <p>Asisten Praktik Digital • XI TP</p>
             </div>
         </div>
         <div class="badge-school">SMK MUH 3 YK</div>
@@ -885,9 +885,8 @@
                     <div class="form-group">
                         <label>Kelas</label>
                         <select class="form-select" id="inputKelas">
-                            <option value="XI TPM 1">XI TPM 1</option>
-                            <option value="XI TPM 2">XI TPM 2</option>
-                            <option value="XI TPM 3">XI TPM 3</option>
+                            <option value="XI TP 1">XI TP 1</option>
+                            <option value="XI TP 2">XI TP 2</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -898,12 +897,11 @@
                 <div class="form-group">
                     <label>Nomor Mesin Bubut Digunakan</label>
                     <select class="form-select" id="inputMesin">
-                        <option value="01">Mesin Bubut 01 (Cuda 360)</option>
-                        <option value="02">Mesin Bubut 02 (Cuda 360)</option>
-                        <option value="03">Mesin Bubut 03 (Cuda 360)</option>
-                        <option value="04">Mesin Bubut 04 (Winho)</option>
-                        <option value="05">Mesin Bubut 05 (Winho)</option>
-                        <option value="06">Mesin Bubut 06 (Winho)</option>
+                        <option value="Bubut 01">Bubut 01</option>
+                        <option value="Bubut 02">Bubut 02</option>
+                        <option value="Bubut 03">Bubut 03</option>
+                        <option value="Bubut 04">Bubut 04</option>
+                        <option value="Bubut 05">Bubut 05</option>
                     </select>
                 </div>
             </div>
@@ -1141,15 +1139,6 @@
 
         <!-- ==================== STEP 4: REVIEW & PENGIRIMAN ==================== -->
         <section id="step4View" style="display: none;">
-            <!-- Status Persetujuan Langsung Guru -->
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding:10px 14px; background:rgba(245, 158, 11, 0.12); border:1px solid var(--accent); border-radius:var(--radius-sm); color:#fbbf24; font-size:12px; line-height:1.4;">
-                <span style="font-size:16px;">⏳</span>
-                <div>
-                    <b>Status: Menunggu Pemeriksaan & ACC Guru Pembimbing</b><br>
-                    <small style="color:var(--text-muted);">Kirimkan file ke Google Drive guru, lalu simpan PDF di HP Anda sebagai pegangan praktik saat guru memeriksa di mesin.</small>
-                </div>
-            </div>
-
             <div class="card">
                 <div class="card-header">
                     <span class="icon">📋</span>
@@ -1159,7 +1148,7 @@
                 <div style="background:var(--bg-surface); padding:12px; border-radius:var(--radius-sm); font-size:12px; line-height:1.6;">
                     <p><b>Nama Siswa:</b> <span id="revNama">-</span></p>
                     <p><b>Kelas / Presensi:</b> <span id="revKelas">-</span> / No. <span id="revAbsen">-</span></p>
-                    <p><b>Mesin Digunakan:</b> Mesin <span id="revMesin">-</span></p>
+                    <p><b>Mesin Digunakan:</b> <span id="revMesin">-</span></p>
                     <p><b>Tugas Praktik:</b> <span id="revProyek">-</span></p>
                     <p><b>Total Langkah Disusun:</b> <span id="revTotalLangkah" style="color:var(--primary-light); font-weight:700;">0</span> Operasi Kerja</p>
                     <p><b>Total Estimasi Waktu:</b> <span id="revTotalWaktu" style="color:var(--accent); font-weight:700;">0 Menit</span></p>
@@ -1182,6 +1171,9 @@
                     </button>
                     <button class="btn btn-outline" onclick="kirimWhatsAppGuru()">
                         💬 3. KIRIM RINGKASAN KE WHATSAPP GURU
+                    </button>
+                    <button class="btn btn-outline" style="border-color:var(--success); color:#6ee7b7; font-weight:600; margin-top:4px;" onclick="selesaiDanKembali()">
+                        ✅ 4. SUDAH SELESAI (KEMBALI KE AWAL)
                     </button>
                 </div>
 
@@ -1303,10 +1295,19 @@
         }
 
         function navigateStep(direction) {
+            if (currentStep === 4 && direction > 0) {
+                selesaiDanKembali();
+                return;
+            }
             currentStep += direction;
             if (currentStep < 1) currentStep = 1;
             if (currentStep > 4) currentStep = 4;
             updateStepView();
+        }
+
+        function selesaiDanKembali() {
+            showToast('Pengerjaan selesai! Kembali ke halaman awal.');
+            goToStep(1);
         }
 
         function updateStepView() {
@@ -1336,7 +1337,7 @@
             if (currentStep === 1) btnNext.innerHTML = 'Lanjut: Kalkulator ➡️';
             else if (currentStep === 2) btnNext.innerHTML = 'Lanjut: Urutan WPS ➡️';
             else if (currentStep === 3) btnNext.innerHTML = 'Lanjut: Pratinjau & Kirim ➡️';
-            else if (currentStep === 4) btnNext.innerHTML = 'Selesai / Kirim 🚀';
+            else if (currentStep === 4) btnNext.innerHTML = 'Sudah Selesai ✅';
 
             if (currentStep === 3) renderStepRows();
             if (currentStep === 4) renderReviewData();
@@ -1609,9 +1610,21 @@
                 let state = JSON.parse(saved);
 
                 if (state.nama) document.getElementById('inputNama').value = state.nama;
-                if (state.kelas) document.getElementById('inputKelas').value = state.kelas;
+                if (state.kelas) {
+                    if (state.kelas === 'XI TPM 1') state.kelas = 'XI TP 1';
+                    else if (state.kelas === 'XI TPM 2') state.kelas = 'XI TP 2';
+                    else if (state.kelas === 'XI TPM 3') state.kelas = 'XI TP 1';
+                    document.getElementById('inputKelas').value = state.kelas;
+                }
                 if (state.absen) document.getElementById('inputAbsen').value = state.absen;
-                if (state.mesin) document.getElementById('inputMesin').value = state.mesin;
+                if (state.mesin) {
+                    if (state.mesin === '01') state.mesin = 'Bubut 01';
+                    else if (state.mesin === '02') state.mesin = 'Bubut 02';
+                    else if (state.mesin === '03') state.mesin = 'Bubut 03';
+                    else if (state.mesin === '04') state.mesin = 'Bubut 04';
+                    else if (state.mesin === '05' || state.mesin === '06') state.mesin = 'Bubut 05';
+                    document.getElementById('inputMesin').value = state.mesin;
+                }
 
                 if (state.jobIndex) {
                     let cards = document.querySelectorAll('.job-card-option');
@@ -2037,7 +2050,7 @@
                         </tr>
                         <tr>
                             <td><b>Kelas / Presensi</b></td><td>:</td><td>${kelas} / No. ${absen}</td>
-                            <td><b>Mesin Bubut</b></td><td>:</td><td>Mesin ${mesin}</td>
+                            <td><b>Mesin Bubut</b></td><td>:</td><td>${mesin}</td>
                         </tr>
                         <tr>
                             <td><b>Material Benda</b></td><td>:</td><td>${mat}</td>
@@ -2180,12 +2193,12 @@
                 `*SMK MUHAMMADIYAH 3 YOGYAKARTA*%0A%0A` +
                 `• *Nama:* ${encodeURIComponent(nama)}%0A` +
                 `• *Kelas / No:* ${encodeURIComponent(kelas)} / ${absen}%0A` +
-                `• *Mesin:* Bubut ${mesin}%0A` +
+                `• *Mesin:* ${mesin}%0A` +
                 `• *Proyek:* ${encodeURIComponent(selectedJobName)}%0A` +
                 `• *Spindel Rekomendasi:* ${recommendedRpm} RPM%0A` +
                 `• *Total Operasi:* ${langkahKerjaList.length} Langkah (${totalWaktu} Menit)%0A` +
                 `• *Kepatuhan APD K3:* Lengkap Disetujui%0A%0A` +
-                `_Mohon persetujuan (approval) Bapak Guru untuk memulai praktik mesin._`;
+                `_Laporan persiapan kerja praktikum mesin bubut selesai disusun & dikirim._`;
 
             window.open('https://api.whatsapp.com/send?text=' + text, '_blank');
         }
